@@ -10,6 +10,7 @@ Entity::Entity()
     width = 1;
     height = 1;
     count = 0;
+	lives = 3;
 }
 
 bool Entity::CheckCollision(Entity other)
@@ -22,10 +23,6 @@ bool Entity::CheckCollision(Entity other)
 
     if (xdist < 0 && ydist < 0)
     {
-        if (entityType == PLAYER && other.entityType == COIN)
-        {
-            other.isActive = false;
-        }
         
         return true;
     }
@@ -54,6 +51,30 @@ void Entity::CheckCollisionsY(Entity *objects, int objectCount)
                 collidedBottom = true;
             }
         }
+    }
+}
+void Entity::AIWalker(Entity player){
+    switch (aiState){
+        case IDLE:
+            if (glm::distance(position, player.position) < 3.0f){
+                aiState = WALKING;
+            }
+            break;
+        case WALKING:
+            if (player.position.x > position.x){
+                velocity.x = 1.0f;
+            }else {
+                velocity.x = -1.0f;
+            }
+            break;
+    }
+}
+
+void Entity::AI(Entity player){
+    switch (aiType) {
+        case WALKER:
+            AIWalker(player);
+            break;
     }
 }
 
@@ -89,6 +110,8 @@ void Entity::Jump()
         velocity.y = 5.0f;
     }
 }
+
+
 
 void Entity::CheckCollisionsX(Map *map)
 {

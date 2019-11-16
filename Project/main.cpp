@@ -42,7 +42,7 @@ Scene *currentScene;
 Scene *sceneList[6];
 
 Mix_Music* music;
-Mix_Chunk* hit_sound;
+Mix_Chunk* jump_sound;
 
 void SwitchToScene(Scene *scene) {
     currentScene = scene;
@@ -65,9 +65,8 @@ void Initialize() {
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 	//music from https://soundimage.org/wp-content/uploads/2018/08/A-Thousand-Exotic-Places.mp3
 	music = Mix_LoadMUS("background.mp3");
-	//bite sound from https://www.freesoundeffects.com/music_2818241010466433_file7d0665438e81d8eceb98c1e31fca80c1.wav
-	hit_sound = Mix_LoadWAV("hit-arg.wav");
-	//need to code in when the hits will happen
+	//jump sound from https://www.noiseforfun.com/waves/action-and-game/NFF-jump.wav
+	jump_sound = Mix_LoadWAV("jump.wav");
 
 	Mix_PlayMusic(music, -1);
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
@@ -108,7 +107,6 @@ void Initialize() {
    // effects->Start(FADEIN, 0.75f);
    // effects->Start(FADEOUT, 0.75f);
    // effects->Start(GROW, 5.0f);
-
 }
 
 void ProcessInput() {
@@ -124,7 +122,8 @@ void ProcessInput() {
                 switch (event.key.keysym.sym) {
                     case SDLK_SPACE:
                         currentScene->state.player.Jump();
-                        break;
+						Mix_PlayChannel(-1, jump_sound, 1);
+						break;
                     case SDLK_k:
                         effects->Start(SHAKE, 1.0f);
                         break;
@@ -204,7 +203,7 @@ void Render() {
 
 void Shutdown() {
 	Mix_FreeMusic(music);
-	Mix_FreeChunk(hit_sound);
+	Mix_FreeChunk(jump_sound);
     SDL_Quit();
 
 }

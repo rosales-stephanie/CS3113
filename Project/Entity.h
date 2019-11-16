@@ -14,12 +14,17 @@
 
 #include "Map.h"
 
-enum  EntityType { PLAYER, PLATFORM, COIN };
-
+enum  EntityType { PLAYER, PLATFORM, ENEMY };
+enum AIState { IDLE, WALKING };
 
 class Entity {
 public:
-    
+    enum AIState aiState{IDLE};
+    enum AIType {WALKER};
+    AIType aiType;
+    void AIWalker(Entity player);
+    void AI(Entity player);
+
     EntityType entityType;
     bool isStatic;
     bool isActive;
@@ -52,10 +57,12 @@ public:
     bool collidedBottom;
     bool collidedLeft;
     bool collidedRight;
+	bool offScreen;
     
     void CheckCollisionsX(Map *map);
     void CheckCollisionsY(Map *map);
-    
+  
+	int lives;
 };
 
 

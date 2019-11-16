@@ -40,18 +40,37 @@ void Level3::Initialize() {
     state.player.position = glm::vec3(5, 0, 0);
     state.player.acceleration = glm::vec3(0, -9.81f, 0);
     state.player.textureID = Util::LoadTexture("me.png");
+
+    state.enemies.entityType = ENEMY;
+    state.enemies.isStatic = false;
+    state.enemies.width = 1.0f;
+    state.enemies.position = glm::vec3(2, 0, 0);
+    state.enemies.acceleration = glm::vec3(0, -9.81f, 0);
+    state.enemies.textureID = Util::LoadTexture("evil.png");
     
     state.nextLevel = -1;
 }
 void Level3::Update(float deltaTime) {
 
+    state.player.Update(deltaTime, NULL, 0, state.map);
+    if (state.enemies.entityType == ENEMY){
+        state.enemies.AI(state.player);
+    }
+    state.enemies.Update(deltaTime, NULL, 0, state.map);
+
+	//die if you go off the screen
+	if (state.player.position.y < -10) {
+		state.nextLevel = 5;
+	}
+
 	//go to win screen, done with all three levels
-	if (state.player.position.x > 12) {
+	if (state.player.position.x >= 18) {
 		state.nextLevel = 4;
 	}
-    state.player.Update(deltaTime, NULL, 0, state.map);
+
 }
 void Level3::Render(ShaderProgram *program) {
     state.map->Render(program);
     state.player.Render(program);
+    state.enemies.Render(program);
 }

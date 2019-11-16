@@ -17,7 +17,6 @@ struct GameState {
     Map *map;
     int nextLevel;
     Entity enemies;
-	int lives;
 };
 
 class Scene {
