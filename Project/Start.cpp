@@ -28,4 +28,6 @@ void Start::Render(ShaderProgram *program) {
     Util::DrawText(program, fontTextureID, "Menu", 1.0f, -0.5f, glm::vec3(4.5, -1, 0));
     Util::DrawText(program, fontTextureID, "Vampire Slayer!", 1.0f, -0.5f, glm::vec3(1.5, -3, 0));
     Util::DrawText(program, fontTextureID, "Press Enter to start", 0.9f, -0.5f, glm::vec3(1.0, -6, 0));
+
+	
 }

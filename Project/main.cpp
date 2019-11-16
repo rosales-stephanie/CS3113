@@ -15,7 +15,7 @@
 #include "Util.h"
 #include "Entity.h"
 #include "Map.h"
-#
+#include "SDL_mixer.h"
 
 // Add headers
 #include "Scene.h"
@@ -23,6 +23,9 @@
 #include "Level1.h"
 #include "Level2.h"
 #include "Level3.h"
+#include "WinScreen.h"
+#include "GameOver.h"
+
 
 
 SDL_Window* displayWindow;
@@ -36,7 +39,10 @@ glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 GLuint fontTextureID;
 
 Scene *currentScene;
-Scene *sceneList[4];
+Scene *sceneList[6];
+
+Mix_Music* music;
+Mix_Chunk* hit_sound;
 
 void SwitchToScene(Scene *scene) {
     currentScene = scene;
@@ -45,7 +51,7 @@ void SwitchToScene(Scene *scene) {
 
 Effects *effects;
 void Initialize() {
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     displayWindow = SDL_CreateWindow("Platformer!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
@@ -54,6 +60,20 @@ void Initialize() {
     glewInit();
 #endif
     
+	//audio
+	int Mix_OpenAudio(int frequency, Uint16 format, int channels, int chunksize);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+	//music from https://soundimage.org/wp-content/uploads/2018/08/A-Thousand-Exotic-Places.mp3
+	music = Mix_LoadMUS("background.mp3");
+	//bite sound from https://www.freesoundeffects.com/music_2818241010466433_file7d0665438e81d8eceb98c1e31fca80c1.wav
+	hit_sound = Mix_LoadWAV("hit-arg.wav");
+	//need to code in when the hits will happen
+
+	Mix_PlayMusic(music, -1);
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+
+
+
     glViewport(0, 0, 640, 480);
     
     program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
@@ -80,6 +100,8 @@ void Initialize() {
     sceneList[1] = new Level1();
     sceneList[2] = new Level2();
     sceneList[3] = new Level3();
+	sceneList[4] = new WinScreen();
+	sceneList[5] = new GameOver();
     SwitchToScene(sceneList[0]);
     
     effects = new Effects(projectionMatrix, viewMatrix);
@@ -181,7 +203,10 @@ void Render() {
 }
 
 void Shutdown() {
+	Mix_FreeMusic(music);
+	Mix_FreeChunk(hit_sound);
     SDL_Quit();
+
 }
 
 int main(int argc, char* argv[]) {
