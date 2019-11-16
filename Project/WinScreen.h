@@ -1,8 +1,7 @@
 #include "Scene.h"
-class GameOver : public Scene {
+class WinScreen : public Scene {
 public:
 	void Initialize() override;
 	void Update(float deltaTime) override;
 	void Render(ShaderProgram* program) override;
 };
-

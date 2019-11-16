@@ -6,13 +6,13 @@
 //  Copyright © 2019 ctg. All rights reserved.
 //
 
-#include "GameOver.h"
+#include "WinScreen.h"
 
-void GameOver::Initialize() {
+void WinScreen::Initialize() {
 	state.nextLevel = -1;
 }
 
-void GameOver::Update(float deltaTime) {
+void WinScreen::Update(float deltaTime) {
 
 	// Check for pressed/held keys below
 	const Uint8* keys = SDL_GetKeyboardState(NULL);
@@ -23,10 +23,10 @@ void GameOver::Update(float deltaTime) {
 	}
 
 }
-void GameOver::Render(ShaderProgram* program) {
+void WinScreen::Render(ShaderProgram* program) {
 	GLuint fontTextureID;
 	fontTextureID = Util::LoadTexture("font1.png");
-	Util::DrawText(program, fontTextureID, "Game Over!", 1.0f, -0.5f, glm::vec3(1.5, -3, 0));
+	Util::DrawText(program, fontTextureID, "You Won!", 1.0f, -0.5f, glm::vec3(1.5, -3, 0));
 	Util::DrawText(program, fontTextureID, "Press Enter to return", 0.9f, -0.5f, glm::vec3(1.0, -5, 0));
 	Util::DrawText(program, fontTextureID, "to main menu", 1.0f, -0.5f, glm::vec3(1.0, -6, 0));
 

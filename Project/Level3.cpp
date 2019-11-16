@@ -44,6 +44,11 @@ void Level3::Initialize() {
     state.nextLevel = -1;
 }
 void Level3::Update(float deltaTime) {
+
+	//go to win screen, done with all three levels
+	if (state.player.position.x > 12) {
+		state.nextLevel = 4;
+	}
     state.player.Update(deltaTime, NULL, 0, state.map);
 }
 void Level3::Render(ShaderProgram *program) {

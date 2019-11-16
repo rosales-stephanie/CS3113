@@ -23,6 +23,9 @@
 #include "Level1.h"
 #include "Level2.h"
 #include "Level3.h"
+#include "WinScreen.h"
+#include "GameOver.h"
+
 
 
 SDL_Window* displayWindow;
@@ -36,7 +39,7 @@ glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 GLuint fontTextureID;
 
 Scene *currentScene;
-Scene *sceneList[5];
+Scene *sceneList[6];
 
 Mix_Music* music;
 Mix_Chunk* hit_sound;
@@ -97,6 +100,8 @@ void Initialize() {
     sceneList[1] = new Level1();
     sceneList[2] = new Level2();
     sceneList[3] = new Level3();
+	sceneList[4] = new WinScreen();
+	sceneList[5] = new GameOver();
     SwitchToScene(sceneList[0]);
     
     effects = new Effects(projectionMatrix, viewMatrix);
