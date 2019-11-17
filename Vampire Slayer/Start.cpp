@@ -18,7 +18,7 @@ void Start::Update(float deltaTime) {
     
     if (keys[SDL_SCANCODE_RETURN])
     {
-        state.nextLevel = 1;
+        state.nextLevel = 1; 
 		//give the player 3 lives again
 		state.player.lives = 3;
     }

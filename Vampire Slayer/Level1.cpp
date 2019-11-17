@@ -1,4 +1,4 @@
-//
+///
 //  Level1.cpp
 //  SDLProject
 //
@@ -9,16 +9,20 @@
 #include "Level1.h"
 #define LEVEL1_WIDTH 14
 #define LEVEL1_HEIGHT 8 
+
+#define ENEMY_COUNT 2
+//int ENEMY_COUNT = 2;
+
 unsigned int level1_data[] =
 {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-    0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
+    0, 0, 0, 0, 0, 0, 3, 0, 0, 3, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 3, 0, 0, 3, 3, 3, 3, 3,
+    0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
 };
 
 
@@ -30,24 +34,36 @@ void Level1::Initialize() {
     state.player.width = 1.0f;
     state.player.position = glm::vec3(5, 0, 0);
     state.player.acceleration = glm::vec3(0, -9.81f, 0);
-    state.player.textureID = Util::LoadTexture("me.png");
+    state.player.textureID = Util::LoadTexture("player.png");
 
-    state.enemies.entityType = ENEMY;
-    state.enemies.isStatic = false;
-    state.enemies.width = 1.0f;
-    state.enemies.position = glm::vec3(2, -2.25, 0);
-    state.enemies.acceleration = glm::vec3(0, -9.81f, 0);
-    state.enemies.textureID = Util::LoadTexture("evil.png");
-    
+    for (int i = 0; i < ENEMY_COUNT; i++){
+        state.enemies[i].entityType = ENEMY;
+        state.enemies[i].isStatic = false;
+        state.enemies[i].width = 1.0f;
+        state.enemies[i].position = glm::vec3(i, -2.25, 0);
+        state.enemies[i].acceleration = glm::vec3(0, -9.81f, 0);
+        state.enemies[i].textureID = Util::LoadTexture("enemy.png");
+    }
+   
+	//load hearts
+	state.heart1.textureID = Util::LoadTexture("health_heart.png");
+	state.heart1.position = glm::vec3(5, 0, 0);
+	state.heart2.textureID = Util::LoadTexture("health_heart.png");
+	state.heart2.position = glm::vec3(5, 0, 0); 
+	state.heart3.textureID = Util::LoadTexture("health_heart.png");
+	state.heart3.position = glm::vec3(5, 0, 0);
+
     state.nextLevel = -1;
 }
 void Level1::Update(float deltaTime) {
     state.player.Update(deltaTime, NULL, 0, state.map);
 
-    state.enemies.Update(deltaTime, NULL, 0, state.map);
-    if (state.enemies.entityType == ENEMY){
-        state.enemies.AI(state.player);
-    }
+	for (int i = 0; i < ENEMY_COUNT; i++){
+		if (state.enemies[i].entityType == ENEMY) {
+			state.enemies[i].AI(state.player);
+		}
+    	state.enemies[i].Update(deltaTime, NULL, 0, state.map);
+	}
 
 	//die if you run out of lives
 	if (state.player.lives == 0) {
@@ -60,19 +76,46 @@ void Level1::Update(float deltaTime) {
 		state.nextLevel = 1;
 	}
 	//if touched by ai 
-	if (state.player.CheckCollision(state.enemies)) {
-        state.enemies.position.x -= 1;
-		state.player.lives -= 1;
+	for (int i = 0; i < ENEMY_COUNT; i++) {
+		if (state.player.CheckCollision(state.enemies[i])) {
+			state.enemies[i].position.x -= 1;
+			state.player.lives -= 1;
+		}
 	}
 
     if (state.player.position.x >= 14) {
         state.nextLevel = 2;
     }
 
+	//update the heart position to be right above the player
+	state.heart1.position.x = state.player.position.x-1;
+	state.heart2.position.x = state.player.position.x;
+	state.heart3.position.x = state.player.position.x+1;
+	state.heart1.position.y = state.player.position.y+1;
+	state.heart2.position.y = state.player.position.y+1;
+	state.heart3.position.y = state.player.position.y+1;
+
 }
 void Level1::Render(ShaderProgram *program) {
     state.map->Render(program);
     state.player.Render(program);
-    state.enemies.Render(program);
 
+	for (int i = 0; i < ENEMY_COUNT; i++){
+		state.enemies[i].Render(program);
+	}
+
+	//only render the amount of hearts left
+	if (state.player.lives == 1) {
+		state.heart1.Render(program);
+	}
+	else if (state.player.lives == 2) {
+		state.heart1.Render(program);
+		state.heart2.Render(program);
+	}
+	else if (state.player.lives ==3){
+		state.heart1.Render(program);
+		state.heart2.Render(program);
+		state.heart3.Render(program);
+	}
+	
 }

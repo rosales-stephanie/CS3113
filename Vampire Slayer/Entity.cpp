@@ -32,10 +32,8 @@ bool Entity::CheckCollision(Entity other)
 
 void Entity::CheckCollisionsY(Entity *objects, int objectCount)
 {
-    for (int i = 0; i < objectCount; i++)
-    {
+    for (int i = 0; i < objectCount; i++) {
         Entity object = objects[i];
-        
         if (CheckCollision(object))
         {
             float ydist = fabs(position.y - object.position.y);
@@ -107,7 +105,7 @@ void Entity::Jump()
 {
     if (collidedBottom)
     {
-        velocity.y = 5.0f;
+        velocity.y = 6.0f;
     }
 }
 
@@ -196,6 +194,7 @@ void Entity::Update(float deltaTime, Entity *objects, int objectCount, Map *map)
     velocity += acceleration * deltaTime;
     position.y += velocity.y * deltaTime;
     CheckCollisionsY(map);
+    CheckCollisionsX(map);
     CheckCollisionsY(objects, objectCount); // Fix if needed
     position.x += velocity.x * deltaTime; // Move on X CheckCollisionsX(map);
     CheckCollisionsX(objects, objectCount); // Fix if needed

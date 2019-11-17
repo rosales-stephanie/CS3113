@@ -38,7 +38,8 @@ public:
     float speed;
     
     int count;
-    
+	int lives;
+
     GLuint textureID;
     
     Entity();
@@ -61,8 +62,6 @@ public:
     
     void CheckCollisionsX(Map *map);
     void CheckCollisionsY(Map *map);
-  
-	int lives;
 };
 
 

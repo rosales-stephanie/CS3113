@@ -12,17 +12,23 @@
 #include "Entity.h"
 #include "Map.h"
 
+#define ENEMY_COUNT 2
+
 struct GameState {
     Entity player;
     Map *map;
     int nextLevel;
-    Entity enemies;
+   // Entity enemies;
+	Entity enemies[ENEMY_COUNT];
+	Entity heart1;
+	Entity heart2;
+	Entity heart3;
 };
 
 class Scene {
 public:
-    GameState state;
-    virtual void Initialize() = 0;
-    virtual void Update(float deltaTime) = 0;
-    virtual void Render(ShaderProgram *program) = 0;
+	GameState state;
+	virtual void Initialize() = 0;
+	virtual void Update(float deltaTime) = 0;
+	virtual void Render(ShaderProgram* program) = 0;
 };

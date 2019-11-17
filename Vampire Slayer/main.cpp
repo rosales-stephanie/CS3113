@@ -26,15 +26,11 @@
 #include "WinScreen.h"
 #include "GameOver.h"
 
-
-
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
 
 ShaderProgram program;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
-
-#define ENEMY_COUNT 1
 
 GLuint fontTextureID;
 
@@ -70,8 +66,6 @@ void Initialize() {
 
 	Mix_PlayMusic(music, -1);
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
-
-
 
     glViewport(0, 0, 640, 480);
     
