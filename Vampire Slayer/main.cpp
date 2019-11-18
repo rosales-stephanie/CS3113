@@ -61,7 +61,7 @@ void Initialize() {
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 	//music from https://soundimage.org/wp-content/uploads/2018/08/A-Thousand-Exotic-Places.mp3
 	music = Mix_LoadMUS("background.mp3");
-	//jump sound from https://www.noiseforfun.com/waves/action-and-game/NFF-jump.wav
+	//jump sound from https://freesound.org/people/BehanSean/sounds/422426/download/422426__behansean__jumps-start.wav
 	jump_sound = Mix_LoadWAV("jump.wav");
 
 	Mix_PlayMusic(music, -1);
