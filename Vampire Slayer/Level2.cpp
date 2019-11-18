@@ -39,10 +39,13 @@ void Level2::Initialize() {
 		state.enemies[i].entityType = ENEMY;
 		state.enemies[i].isStatic = false;
 		state.enemies[i].width = 1.0f;
-		state.enemies[i].position = glm::vec3(i, -2.25, 0);
+		//state.enemies[i].position = glm::vec3(i, -2.25, 0);
 		state.enemies[i].acceleration = glm::vec3(0, -9.81f, 0);
 		state.enemies[i].textureID = Util::LoadTexture("enemy.png");
 	}
+
+	state.enemies[0].position = glm::vec3(1, -2.25, 0);
+	state.enemies[1].position = glm::vec3(9, -2.25, 0);
     
 	//load hearts
 	state.heart1.textureID = Util::LoadTexture("health_heart.png");
@@ -57,7 +60,7 @@ void Level2::Initialize() {
 void Level2::Update(float deltaTime) {
     state.player.Update(deltaTime, NULL, 0, state.map);
 
-	if (state.player.position.x >= 14) {
+	if (state.player.position.x >= 13) {
 		state.nextLevel = 3;
 	}
 
