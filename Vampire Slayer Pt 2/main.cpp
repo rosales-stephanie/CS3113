@@ -100,13 +100,17 @@ void Initialize() {
     Mesh *shipMesh = new Mesh();
     pikaMesh->LoadOBJ("ship.obj");
     
-    GLuint floorTextureID = Util::LoadTexture("100_1180_seamless.JPG");
+    GLuint floorTextureID = Util::LoadTexture("dirt.jfif");
     Mesh *floorMesh = new Mesh();
     floorMesh->LoadOBJ("cube.obj");
     
-    GLuint crateTextureID = Util::LoadTexture("crate1_diffuse.png");
+    GLuint crateTextureID = Util::LoadTexture("Metal_Plate.jpg");
     Mesh *crateMesh = new Mesh();
     crateMesh->LoadOBJ("cube.obj");
+
+	GLuint catTextureID = Util::LoadTexture("cat.jpg");
+	Mesh* catMesh = new Mesh();
+	catMesh->LoadOBJ("cat.obj");
     
 //    state.objects[0].position = glm::vec3(-2,0,-100);
 //    state.objects[0].acceleration = glm::vec3(0,0,1);
@@ -252,11 +256,18 @@ void Initialize() {
         }
         depth -= 1;
     }
+
+	/*
+	GLuint enemyTextureID = Util::LoadTexture("cat.jpg");
+	Mesh* enemyMesh = new Mesh();
+	enemyMesh->LoadOBJ("cat.obj");
+	*/
     
-    GLuint enemyTextureID = Util::LoadTexture("me.png");
+    GLuint enemyTextureID = Util::LoadTexture("vampire.png");
     for (int i = 0; i < ENEMY_COUNT; i++) {
          state.enemies[i].billboard = true;
          state.enemies[i].textureID = enemyTextureID;
+	//	 state.enemies[i].mesh = enemyMesh;
          state.enemies[i].position = glm::vec3(rand() % 20 - 10, 1, rand() % 20 - 10);
          state.enemies[i].rotation = glm::vec3(0, 0, 0);
          state.enemies[i].acceleration = glm::vec3(0, 0, 0);
@@ -362,9 +373,9 @@ void Render() {
     for (int i = 0; i < OBJECT_COUNT; i++) {
         state.objects[i].Render(&program);
     }
-   /*for (int i = 0; i < ENEMY_COUNT; i++) {
+   for (int i = 0; i < ENEMY_COUNT; i++) {
         state.enemies[i].Render(&program);
-    }*/
+    }
     SDL_GL_SwapWindow(displayWindow);
 }
 
