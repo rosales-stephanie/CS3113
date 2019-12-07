@@ -203,7 +203,7 @@ void Initialize() {
             state.objects[count].entityType = BOX;
             count += 1;
         }
-        depth += 1;
+        depth -= 1;
     }
     //wall 9
     depth = 2;
