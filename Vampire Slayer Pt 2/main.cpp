@@ -108,15 +108,6 @@ void Initialize() {
     Mesh *crateMesh = new Mesh();
     crateMesh->LoadOBJ("cube.obj");
     
-//    state.objects[0].position = glm::vec3(-2,0,-100);
-//    state.objects[0].acceleration = glm::vec3(0,0,1);
-//    state.objects[0].vertices = cubeVertices;
-//    state.objects[0].velocity = glm::vec3(0,0,10); //constant speed towards you
-//    state.objects[0].texCoords = cubeTexCoords;
-//    state.objects[0].numVertices = 36;
-//    state.objects[0].textureID = objectTexture;
-//
-    
     state.objects[0].position = glm::vec3(0,0,0);
     state.objects[0].scale = glm::vec3(20,1,20);
     state.objects[0].rotation = glm::vec3(0,0,0);
@@ -125,20 +116,20 @@ void Initialize() {
     state.objects[0].velocity = glm::vec3(0,0,10); //constant speed towards you
     state.objects[0].textureID = floorTextureID;
     state.objects[0].mesh = floorMesh;
-    //wall 1 33
+    //wall 1
     int count = 1;
-    for (int i = 0; i < 11; i++) {
+    for (int i = 8; i > 4; i--) {
         for (int j = 1; j < 4; j++){
-            state.objects[count].position = glm::vec3(i,j,-5);
+            state.objects[count].position = glm::vec3(i,j,-3);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
             state.objects[count].entityType = BOX;
             count += 1;
         }
     }
-    //wall 2 9
-    int depth = 0;
-    for (int i = 0; i < 3; i++) {
+    //wall 2
+    int depth = 1;
+    for (int i = 0; i < 5; i++) {
         for (int j = 1; j < 4; j++){
             state.objects[count].position = glm::vec3(8,j,depth);
             state.objects[count].textureID = crateTextureID;
@@ -148,31 +139,53 @@ void Initialize() {
         }
         depth -= 1;
     }
-    //wall 3 9
-    for (int i = 8; i > 5; i--) {
-        for (int j = 1; j < 4; j++){
-            state.objects[count].position = glm::vec3(i,j,-2);
-            state.objects[count].textureID = crateTextureID;
-            state.objects[count].mesh = crateMesh;
-            state.objects[count].entityType = BOX;
-            count += 1;
-        }
-    }
-    //back wall 4 9
+    //back wall 4
     for (int i = 8; i < 11; i++) {
         for (int j = 1; j < 4; j++){
-            state.objects[count].position = glm::vec3(i,j,1);
+            state.objects[count].position = glm::vec3(i,j,2);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
             state.objects[count].entityType = BOX;
             count += 1;
         }
     }
-    //horizontal to the left 5 9
+    // wall 3
+    depth = -1;
+    for (int i = 0; i < 10; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(10.5,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth -= 1;
+    }
+    // wall 5
+    for (int i = 10; i > 6; i--) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(i,j,-6);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+    }
+    //wall 6
+    for (int i = 11; i > -11; i--) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(i,j,-10.5);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+    }
+    //wall 7
     depth = 0;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 11; i++) {
         for (int j = 1; j < 4; j++){
-            state.objects[count].position = glm::vec3(5,j,depth);
+            state.objects[count].position = glm::vec3(-10.5,j,depth);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
             state.objects[count].entityType = BOX;
@@ -180,12 +193,65 @@ void Initialize() {
         }
         depth -= 1;
     }
-    // total: 70
-    //horizontal to the left above 6 9
-    depth = 0;
+    //wall 8
+    depth = 11;
+    for (int i = 0; i < 7; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(-10.5,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth += 1;
+    }
+    //wall 9
+    depth = 2;
+    for (int i = 0; i < 9; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(10,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth += 1;
+    }
+    //wall 10
+    for (int i = -11; i < 11; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(i,j,10.5);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+    }
+    //wall 11
+    for (int i = 9; i > 6; i--) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(i,j,7);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+    }
+    //wall 12
+    for (int i = 4; i > 0; i--) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(i,j,5);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+    }
+    //wall 13
+    depth = 10.5;
     for (int i = 0; i < 3; i++) {
         for (int j = 1; j < 4; j++){
-            state.objects[count].position = glm::vec3(2,j,depth);
+            state.objects[count].position = glm::vec3(4,j,depth);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
             state.objects[count].entityType = BOX;
@@ -193,22 +259,10 @@ void Initialize() {
         }
         depth -= 1;
     }
-    //horizontal wall to the right 9 9
-    depth = -5;
+    //wall 14
+    depth = 5;
     for (int i = 0; i < 3; i++) {
         for (int j = 1; j < 4; j++){
-            state.objects[count].position = glm::vec3(0,j,depth);
-            state.objects[count].textureID = crateTextureID;
-            state.objects[count].mesh = crateMesh;
-            state.objects[count].entityType = BOX;
-            count += 1;
-        }
-        depth -= 1;
-    }
-    //wall lower right 8 9
-    depth = -8;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 1; j < 4; j++) {
             state.objects[count].position = glm::vec3(3,j,depth);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
@@ -217,12 +271,11 @@ void Initialize() {
         }
         depth -= 1;
     }
-  //total: 97
-    // wall lower left 7 9
-    depth = -6;
+    //wall 15
+    depth = -3;
     for (int i = 0; i < 3; i++) {
-        for (int j = 1; j < 4; j++) {
-            state.objects[count].position = glm::vec3(6,j,depth);
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(4,j,depth);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
             state.objects[count].entityType = BOX;
@@ -230,9 +283,9 @@ void Initialize() {
         }
         depth -= 1;
     }
-    // wall 11 9
-    for (int i = 1; i > -2; i--) {
-        for (int j = 1; j < 4; j++) {
+    //wall 16
+    for (int i = 4; i > 0; i--) {
+        for (int j = 1; j < 4; j++){
             state.objects[count].position = glm::vec3(i,j,0);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
@@ -240,10 +293,68 @@ void Initialize() {
             count += 1;
         }
     }
-    //wall 10
-    depth = -5;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 1; j < 4; j++) {
+    //wall 17
+    depth = -1;
+    for (int i = 0; i < 10; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(1,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth -= 1;
+    }
+    //wall 18
+    depth = 10.5;
+    for (int i = 0; i < 6; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(1,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth -= 1;
+    }
+    //wall 19
+    for (int i = -10; i < -3; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(i,j,4);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+    }
+    //wall 20
+    depth = 10.5;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(-7,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth -= 1;
+    }
+    //wall 21
+    depth = -4;
+    for (int i = 0; i < 7; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(-6,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth -= 1;
+    }
+    //wall 22
+    depth = -4;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 1; j < 4; j++){
             state.objects[count].position = glm::vec3(-3,j,depth);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
@@ -252,19 +363,73 @@ void Initialize() {
         }
         depth -= 1;
     }
-    //total: 124
-    /*
-    //wall 12
-    for (int i = -1; i > -4; i--) {
+    //wall 23
+    for (int i = -2; i < 1; i++) {
         for (int j = 1; j < 4; j++){
-            state.objects[count].position = glm::vec3(i,j,-3);
+            state.objects[count].position = glm::vec3(i,j,-4);
             state.objects[count].textureID = crateTextureID;
             state.objects[count].mesh = crateMesh;
             state.objects[count].entityType = BOX;
             count += 1;
         }
     }
-    */
+    //wall 24
+    for (int i = -8; i < -3; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(i,j,-1);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+    }
+    //wall 25
+    depth = 6;
+    for (int i = 0; i < 7; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(-4,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth -= 1;
+    }
+    //wall 26
+    for (int i = -4; i < -1; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(i,j,6);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+    }
+    //wall 27
+    depth = 6;
+    for (int i = 0; i < 5; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(-2,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth -= 1;
+    }
+    //wall 28
+    depth = -8;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 1; j < 4; j++){
+            state.objects[count].position = glm::vec3(4,j,depth);
+            state.objects[count].textureID = crateTextureID;
+            state.objects[count].mesh = crateMesh;
+            state.objects[count].entityType = BOX;
+            count += 1;
+        }
+        depth -= 1;
+    }
+    
     GLuint enemyTextureID = Util::LoadTexture("me.png");
     for (int i = 0; i < ENEMY_COUNT; i++) {
          state.enemies[i].billboard = true;
