@@ -501,7 +501,9 @@ void Update() {
         for (int i = 0; i < ENEMY_COUNT; i ++){
             state.objects[i].Update(FIXED_TIMESTEP, &state.player, state.objects, OBJECT_COUNT);
         }
-        
+        for (int i = 0; i < ENEMY_COUNT; i++) { //update each billboard enemy!
+            state.enemies[i].Update(FIXED_TIMESTEP, &state.player, state.objects, ENEMY_COUNT);
+        }
         deltaTime -= FIXED_TIMESTEP;
     }
     
