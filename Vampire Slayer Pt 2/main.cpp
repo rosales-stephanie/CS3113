@@ -75,23 +75,6 @@ void Initialize() {
 	sceneList[2] = new Win();
 	sceneList[3] = new GameOver();
 	SwitchToScene(sceneList[0]);
-
-	viewMatrix = glm::mat4(1.0f);
-	modelMatrix = glm::mat4(1.0f);
-
-	projectionMatrix = glm::perspective(45.0f, 1.777f, 0.1f, 100.0f);
-	program.SetProjectionMatrix(projectionMatrix);
-	program.SetViewMatrix(viewMatrix);
-	program.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	glUseProgram(program.programID);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_DEPTH_TEST);
-	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LEQUAL);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void ProcessInput() {
