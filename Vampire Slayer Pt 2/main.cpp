@@ -54,7 +54,22 @@ void Initialize() {
 
 	program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
 	fontTextureID = Util::LoadTexture("font1.png");
+	
+    	viewMatrix = glm::mat4(1.0f);
+    	modelMatrix = glm::mat4(1.0f);
+    	projectionMatrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
 
+    	program.SetProjectionMatrix(projectionMatrix);
+    	program.SetViewMatrix(viewMatrix);
+    	program.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+    	glUseProgram(program.programID);
+
+    	glEnable(GL_BLEND);
+    	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	
 	sceneList[0] = new MainMenu();
 	sceneList[1] = new Level1();
 	sceneList[2] = new Win();
