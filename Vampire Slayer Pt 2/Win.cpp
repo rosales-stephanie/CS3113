@@ -9,6 +9,7 @@
 #include "Win.h"
 
 void Win::Initialize() {
+	state.currLevel = 2;
 	state.nextLevel = -1;
 }
 

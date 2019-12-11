@@ -8,7 +8,18 @@ Entity::Entity()
     width = 1.0f;
     height = 1.0f;
     depth = 1.0f;
+    killEnemy = false;
 }
+
+bool Entity::isClose(Entity* other)
+{
+	float xdist = fabs(position.x - other->position.x) - ((width + other->width) / 2.0f);
+	float ydist = fabs(position.y - other->position.y) - ((height + other->height) / 2.0f);
+	float zdist = fabs(position.z - other->position.z) - ((depth + other->depth) / 2.0f);
+	if (xdist < 2 && ydist < 2 && zdist < 2) return true;
+	return false;
+}
+
 bool Entity::CheckCollision(Entity *other)
 {
     float xdist = fabs(position.x - other->position.x) - ((width + other->width) / 2.0f);
@@ -17,12 +28,7 @@ bool Entity::CheckCollision(Entity *other)
     if (xdist < 0 && ydist < 0 && zdist < 0) return true;
     return false;
 }
-//Entity::Entity()
-//{
-//    position = glm::vec3(0);
-//    scale = glm::vec3(1,1,1);
-//}
-//void Entity::forward(float speed);
+
 void Entity::Update(float deltaTime, Entity *player, Entity *objects, int objectCount)
 {
     if (billboard) {

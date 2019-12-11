@@ -10,16 +10,22 @@
 #include "ShaderProgram.h"
 #include "Util.h"
 #include "Entity.h"
+#include "SDL_mixer.h"
 //#include "Map.h"
 
 #define OBJECT_COUNT 544
 #define ENEMY_COUNT 1
 
 struct GameState {
+	float startTime = 0;
+	float time = 0;
+	int currLevel;
 	int nextLevel;
 	Entity player;
 	Entity objects[OBJECT_COUNT];
 	Entity enemies[ENEMY_COUNT];
+	Mix_Chunk* win_sound = Mix_LoadWAV("win.wav");
+	Mix_Chunk* lose_sound = Mix_LoadWAV("lose.wav");
 };
 
 class Scene {

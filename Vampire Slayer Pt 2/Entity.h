@@ -19,8 +19,10 @@ public:
     float width;
     float height;
     float depth;
+
+	bool isClose(Entity* other);
     bool CheckCollision(Entity *other);
-    
+    bool killEnemy;
     glm::vec3 position;
     glm::vec3 velocity;
     glm::vec3 acceleration;

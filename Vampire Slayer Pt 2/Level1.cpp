@@ -1,5 +1,10 @@
 
+#include <vector>
+#include "glm/mat4x4.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "ShaderProgram.h"
 #include "Level1.h"
+
 //#define LEVEL1_WIDTH 14
 //#define LEVEL1_HEIGHT 8 
 
@@ -41,9 +46,8 @@ float cubeTexCoords[] = {
 
 
 void Level1::Initialize() {
-	state.player.position = glm::vec3(9, 1, 0);
-	state.player.acceleration = glm::vec3(0, 0, 0);
-
+	state.startTime = SDL_GetTicks()/1000.0f;
+	state.currLevel = 1;
 	GLuint floorTextureID = Util::LoadTexture("dirt.jfif");
 	Mesh* floorMesh = new Mesh();
 	floorMesh->LoadOBJ("cube.obj");
@@ -51,6 +55,9 @@ void Level1::Initialize() {
 	GLuint crateTextureID = Util::LoadTexture("Metal_Plate.jpg");
 	Mesh* crateMesh = new Mesh();
 	crateMesh->LoadOBJ("cube.obj");
+
+	state.player.position = glm::vec3(9, 1, 0);
+	state.player.acceleration = glm::vec3(0, 0, 0);
 
 	state.objects[0].position = glm::vec3(0, 0, 0);
 	state.objects[0].scale = glm::vec3(20, 1, 20);
@@ -377,37 +384,51 @@ void Level1::Initialize() {
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		state.enemies[i].billboard = true;
 		state.enemies[i].textureID = enemyTextureID;
-		state.enemies[i].position = glm::vec3(9, 1, -4);
+		state.enemies[i].position = glm::vec3(-3, 1, 6);
 		state.enemies[i].rotation = glm::vec3(0, 0, 0);
 		state.enemies[i].acceleration = glm::vec3(0, 0, 0);
 	}
 
+	//Mix_PlayChannel(-1, state.win_sound, 1);
 	state.nextLevel = -1;
 }
 void Level1::Update(float deltaTime) {
-	state.player.Update(deltaTime, NULL, 0, 0);
+	//state.player.Update(deltaTime, NULL, 0, 0);
 
 	
 	state.player.Update(deltaTime, &state.player, state.objects, OBJECT_COUNT);
 	for (int i = 0; i < ENEMY_COUNT; i++) {
 		state.enemies[i].Update(deltaTime, &state.player, state.objects, OBJECT_COUNT);
+		if (state.player.CheckCollision(&state.enemies[i])) {
+			//Mix_PlayChannel(-1, state.lose_sound, 1);
+		}
 	}
 
-	if (state.player.position.x >= 13) {
-		state.nextLevel = 2;
+	//if you reach the end of the maze, play a win sound
+	if (state.player.position.x <= -9 && -1 <= state.player.position.z && state.player.position.z <= 4) {
+		Mix_PlayChannel(-1, state.win_sound, 1);
+		state.nextLevel = 1;
 	}
 
+	//you have two minutes, otherwise you lose
+	if ((state.time - state.startTime) >= 120) {
+		Mix_PlayChannel(-1, state.lose_sound, 1);
+	}
+
+	
 }
 void Level1::Render(ShaderProgram* program) {
 	//state.map->Render(program);
-	state.player.Render(program);
-
+	//state.player.Render(program);
 
 
 	for (int i = 0; i < OBJECT_COUNT; i++) {
 		state.objects[i].Render(program);
 	}
-	for (int i = 0; i < ENEMY_COUNT; i++) {
+
+	//if you dont push spacebar, and didnt see an enemy, thennnn you didnt kill them, so render em
+
+	for (int i = 0; i < ENEMY_COUNT; i++) {		
 		state.enemies[i].Render(program);
 	}
 

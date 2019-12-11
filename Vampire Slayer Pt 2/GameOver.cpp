@@ -9,6 +9,7 @@
 #include "GameOver.h"
 
 void GameOver::Initialize() {
+	state.currLevel = 3;
 	state.nextLevel = -1;
 }
 

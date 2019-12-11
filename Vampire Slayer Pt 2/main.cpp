@@ -19,18 +19,27 @@
 #include "Level1.h"
 #include "Win.h"
 #include "GameOver.h"
+#include "SDL_mixer.h"
+
 
 
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
 
-ShaderProgram program;
+//program is 3d, program2 is 2d
+ShaderProgram program, program2;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
+
+glm::mat4 uiViewMatrix, uiProjectionMatrix;;
 
 GLuint fontTextureID;
 
 Scene* currentScene;
 Scene* sceneList[4];
+
+//int curr_level = 0;
+Mix_Music* music;
+
 
 void SwitchToScene(Scene* scene) {
 	currentScene = scene;
@@ -41,7 +50,7 @@ void SwitchToScene(Scene* scene) {
 
 
 void Initialize() {
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 	displayWindow = SDL_CreateWindow("3D!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_OPENGL);
 	SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
 	SDL_GL_MakeCurrent(displayWindow, context);
@@ -49,31 +58,55 @@ void Initialize() {
 #ifdef _WINDOWS
 	glewInit();
 #endif
+	//audio stuff
+	int Mix_OpenAudio(int frequency, Uint16 format, int channels, int chunksize);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+	music = Mix_LoadMUS("organ_music.mp3");
+	//currentScene->state.win_sound = Mix_LoadWAV("win.wav");
+	//currentScene->state.lose_sound = Mix_LoadWAV("lose.wav");
+
+	Mix_PlayMusic(music, -1);
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+
 
 	glViewport(0, 0, 1280, 720);
 
 	program.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
+    program2.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
+
 	fontTextureID = Util::LoadTexture("font1.png");
-	
-    	viewMatrix = glm::mat4(1.0f);
-    	modelMatrix = glm::mat4(1.0f);
-    	projectionMatrix = glm::ortho(-5.0f, 5.0f, -3.75f, 3.75f, -1.0f, 1.0f);
 
-    	program.SetProjectionMatrix(projectionMatrix);
-    	program.SetViewMatrix(viewMatrix);
-    	program.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    	glUseProgram(program.programID);
-
-    	glEnable(GL_BLEND);
-    	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	
 	sceneList[0] = new MainMenu();
 	sceneList[1] = new Level1();
 	sceneList[2] = new Win();
 	sceneList[3] = new GameOver();
+        
+	glUseProgram(program.programID);
+    glUseProgram(program2.programID);
+
+	uiViewMatrix = glm::mat4(1.0f);
+	viewMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::mat4(1.0f);
+
+
+	projectionMatrix = glm::perspective(45.0f, 1.777f, 0.1f, 100.0f);
+	uiProjectionMatrix = glm::ortho(-6.4f, 6.4f, -3.6f, 3.6f, -1.0f, 1.0f);
+	program.SetProjectionMatrix(projectionMatrix);
+	program.SetViewMatrix(viewMatrix);
+	program.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+	program2.SetProjectionMatrix(uiProjectionMatrix);
+	program2.SetViewMatrix(viewMatrix);
+	program2.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+  
+
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	
+	
 	SwitchToScene(sceneList[0]);
 }
 
@@ -89,7 +122,7 @@ void ProcessInput() {
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym) {
                     case SDLK_SPACE:
-                        // Some sort of action
+                        currentScene->state.player.killEnemy = true;
                         break;
                 }
                 break;
@@ -121,6 +154,9 @@ float accumulator = 0.0f;
 
 void Update() {
     float ticks = (float)SDL_GetTicks() / 1000.0f;
+
+	currentScene->state.time = ticks;
+
     float deltaTime = ticks - lastTicks;
     lastTicks = ticks;
     
@@ -148,6 +184,8 @@ void Update() {
 void Render() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     program.SetViewMatrix(viewMatrix);
+    program2.SetViewMatrix(viewMatrix);
+
    /*
 	for (int i = 0; i < OBJECT_COUNT; i++) {
         state.objects[i].Render(&program);
@@ -156,11 +194,21 @@ void Render() {
         state.enemies[i].Render(&program);
     }
 	*/
-	currentScene->Render(&program);
+
+	//supposed to be in 3d
+	if (sceneList[1]->state.currLevel == Level1().state.currLevel) {
+	    currentScene->Render(&program2);
+    }
+    else {
+	    currentScene->Render(&program);
+    }
     SDL_GL_SwapWindow(displayWindow);
 }
 
 void Shutdown() {
+	Mix_FreeMusic(music);
+	Mix_FreeChunk(currentScene->state.lose_sound);
+	Mix_FreeChunk(currentScene->state.win_sound);
     SDL_Quit();
 }
 
@@ -168,6 +216,9 @@ int main(int argc, char* argv[]) {
     Initialize();
     
     while (gameIsRunning) {
+		if (currentScene->state.nextLevel >= 0) {
+			SwitchToScene(sceneList[currentScene->state.nextLevel]);
+		}
         ProcessInput();
         Update();
         Render();
