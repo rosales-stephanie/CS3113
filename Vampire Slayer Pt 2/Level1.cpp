@@ -408,6 +408,8 @@ void Level1::Update(float deltaTime) {
 	if (state.player.position.x <= -9 && -1 <= state.player.position.z && state.player.position.z <= 4) {
 		Mix_PlayChannel(-1, state.win_sound, 1);
 		state.nextLevel = 1;
+		state.player.velocity = 0;
+		state.player.acceleration = 0;
 	}
 
 	//you have two minutes, otherwise you lose
