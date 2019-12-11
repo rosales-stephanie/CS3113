@@ -413,6 +413,8 @@ void Level1::Update(float deltaTime) {
 	//you have two minutes, otherwise you lose
 	if ((state.time - state.startTime) >= 120) {
 		Mix_PlayChannel(-1, state.lose_sound, 1);
+		state.player.velocity = 0;
+		state.player.acceleration = 0;
 	}
 
 	
